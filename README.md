@@ -18,7 +18,11 @@ Language: Python 3.x
 
 Libraries: scikit-learn, pandas, NumPy, UMAP (for visualization), SciPy (sparse matrices)
 
-Data Source: MovieLens Dataset [https://movielens.org/](https://grouplens.org/datasets/movielens/tag-genome-2021)
+### Data Access
+**Note:** The dataset used in this project (MovieLens 25M) exceeds GitHub's file size limits.
+1. Download the dataset directly from [GroupLens.org](https://grouplens.org/datasets/movielens/25m/).
+2. Extract the files into a folder named `data/` in the root directory.
+   * Required files: `movies.csv`, `metadata.json`, `ratings.json`, `tagdl.csv`.
 
 ### Thematic Discovery via PCA
 A core achievement of this project was moving beyond static genre labels. By applying **Principal Component Analysis (PCA)** to user-generated tags, the system identified latent "Mood" clusters.
