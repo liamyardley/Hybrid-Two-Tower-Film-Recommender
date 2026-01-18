@@ -7,7 +7,7 @@ Using the MovieLens dataset, this project explores how hybrid architectures can 
 ## Key Features
 Two-Tower Architecture: Separates user preferences and item features into distinct processing pipelines before synthesis.
 
-Latent Semantic Analysis: Utilizes PCA (Principal Component Analysis) to reduce high-dimensional user tags into core thematic components (e.g., distinguishing "Dark Comedy" from "Slapstick" beyond standard genre tags).
+Latent Semantic Analysis: Utilizes PCA (Principal Component Analysis) to reduce high-dimensional user tags into core thematic components (e.g., distinguishing "Action Thrillers" from "Critically Acclaimed" beyond standard genre tags).
 
 Cold-Start Resolution: Implements a fallback strategy using popularity sampling and metadata matching for users with insufficient interaction history.
 
@@ -19,6 +19,32 @@ Language: Python 3.x
 Libraries: scikit-learn, pandas, NumPy, UMAP (for visualization), SciPy (sparse matrices)
 
 Data Source: MovieLens Dataset [https://movielens.org/](https://grouplens.org/datasets/movielens/tag-genome-2021)
+
+### Thematic Discovery via PCA
+A core achievement of this project was moving beyond static genre labels. By applying **Principal Component Analysis (PCA)** to user-generated tags, the system identified latent "Mood" clusters.
+* **Insight:** Traditional genres (e.g., "Action") are often too broad.
+* **Result:** The model identified specific, coherent themes such as *"Critically Acclaimed Dramas"* or *"High-Octane Action"* that cut across genre boundaries.
+* **Application:** This allows the recommender to function similarly to Spotify or Netflix, offering "Mood-based" suggestions rather than just category matching.
+
+### Engineering Challenges & Trade-offs
+During development, several architectural decisions were weighed against constraints:
+
+* **MinHash & LSH (Locality Sensitive Hashing):**
+    * *Attempted:* To account for Actor/Director preferences.
+    * *Outcome:* Excluded to prevent bias. While users love "Tarantino films," weighting this too heavily for generic action movies introduced noise.
+    
+* **Inference Latency vs. Scalability:**
+    * *Current State:* Generating top-5 recommendations takes ~20 seconds/user.
+    * *Trade-off:* Acceptable for a "Batch Processing" context (updating user towers nightly), but unscalable for real-time serving.
+    * *Solution:* Productionizing this would require vector indexing tools like **FAISS** or **Annoy** for sub-millisecond similarity search.
+
+* **Explicit vs. Implicit Data:**
+    * The model relies on explicit ratings (high user friction). A production iteration would need to weigh implicit signals (watch time, clicks) to reduce the "Cold Start" burden on the user.
+
+### Future Roadmap
+* **User Normalization:** Implement Z-score standardization on user ratings to account for "Generous" vs. "Critical" rating behaviors.
+* **NLP Integration:** Utilize BERT-based embeddings on film Plot Summaries to capture narrative similarity beyond metadata.
+* **Scalability:** Migrate the nearest-neighbor search to **FAISS (Facebook AI Similarity Search)**.
 
 ## Project Context
 Developed as a Project for CSCI S-108: Data Mining, Discovery, and Exploration at Harvard Extension School (Harvard DCE).
